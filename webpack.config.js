@@ -7,4 +7,9 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
     },
     mode: 'development',
+    resolve: {
+        alias: {
+            Util: path.resolve(__dirname, 'src/util/'),
+        },
+    },
 }
