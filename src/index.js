@@ -50,6 +50,11 @@ function runApp() {
                 project: selectedProject,
             });
         })
+
+        eventAggregator.subscribe('taskAdded', ({task, project}) => {
+            project.addTask(task);
+            renderTaskList();
+        })
     }
 
     function renderProjectList() {
@@ -70,9 +75,22 @@ function runApp() {
                     $list[i].classList.remove('selected');
                 }
                 $project.classList.add('selected');
+                renderTaskList();
             })
 
             dom.projectList.appendChild($project);
+        }
+    }
+
+    function renderTaskList() {
+        emptyElement(dom.taskList);
+        const taskList = selectedProject.getTaskList();
+        for (let i = 0; i < taskList.length; i++) {
+            const task = taskList[i];
+            const $task = div(task.getTitle());
+            $task.classList.add('task');
+
+            dom.taskList.appendChild($task);
         }
     }
 }
