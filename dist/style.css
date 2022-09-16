@@ -1,0 +1,48 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --header-height: 60px;
+}
+
+body {
+    margin: 0px;
+}
+
+#header {
+    background-color: lightblue;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--header-height);
+}
+
+.main-section {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    height: calc(100vh - var(--header-height));
+}
+
+.main-section div {
+    padding: 4px;
+}
+
+.main-section .sidebar {
+    background-color: lightcoral;
+}
+
+.main-section .sidebar .new-project-form {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+}
+
+.main-section .sidebar .new-project-form #project-form-input {
+    width: 140px;
+}
+
+.main-section .sidebar .selected {
+    background-color: pink;
+}

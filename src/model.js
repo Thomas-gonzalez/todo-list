@@ -1,13 +1,17 @@
-export function makeTask(title, description, dueDate, priority) {
+export function mTask(title, description, dueDate, priority, isComplete=false) {
     return {
         getTitle: () => title,
         getDescription: () => description,
         getDueDate: () => dueDate,
-        getPriority: () => priority,        
+        getPriority: () => priority,
+        getIsComplete: () => isComplete,
+        markComplete: () => {
+            isComplete = true;
+        },
     }
 }
 
-export function makeProjectList(name) {
+export function mProject(name) {
     const taskList = [];
     return {
         getName: () => name,
@@ -16,6 +20,8 @@ export function makeProjectList(name) {
             taskList.forEach(task => list.push(task));
             return list;
         },
-        addTask: (task) => taskList.push(task),
+        addTask: (task) => {
+            taskList.push(task);
+        },
     }
 }
