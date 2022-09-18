@@ -14,7 +14,8 @@ function runApp() {
 
     let selectedProject = null;
 
-    setEvents(dom);
+    setDomEvents(dom);
+    setAggregatorEvents();
     addDefaultProject();
 
     function cacheDom() {
@@ -30,22 +31,14 @@ function runApp() {
         return dom;
     }
 
-    function setEvents(dom) {
+    function setDomEvents(dom) {
         dom.newProject.addEventListener('click', () => {
             newProjectForm({ container: dom.projectList, eventAggregator: eventAggregator });
             document.getElementById('project-form-input').focus();
         });
-
-        eventAggregator.subscribe('projectAdded', (project) => {
-            projects[project.getName()] = project;
-            selectedProject = project;
-            renderProjectList();
-        });
-
         dom.header.addEventListener('click', () => { //log stuff DELETE
             console.log(`selected project: ${selectedProject.getName()}`);
         })
-
         dom.newTask.addEventListener('click', () => {
             newTaskForm({ 
                 container: dom.taskList,
@@ -53,7 +46,14 @@ function runApp() {
                 project: selectedProject,
             });
         })
+    }
 
+    function setAggregatorEvents(dom) {
+        eventAggregator.subscribe('projectAdded', (project) => {
+            projects[project.getName()] = project;
+            selectedProject = project;
+            renderProjectList();
+        });
         eventAggregator.subscribe('taskAdded', ({task, project}) => {
             project.addTask(task);
             renderTaskList();
