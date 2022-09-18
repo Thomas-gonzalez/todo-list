@@ -1,10 +1,10 @@
-import { createProject, mProject } from "./model";
+import { mProject } from "./model";
 import newProjectForm from "./components/new-project-form";
 import mEventAggregator from "./components/event-aggregator";
 import emptyElement from "./util/empty-element";
 import { div } from "./util/create-element";
 import newTaskForm from "./components/new-task-form";
-import { renderProjectList, renderTaskList } from "./view";
+import { cacheDom, renderProjectList, renderTaskList } from "./view";
 
 runApp();
 
@@ -25,18 +25,6 @@ function runApp() {
     setAggregatorEvents();
     addDefaultProject();
 
-    function cacheDom() {
-        const dom = {}
-    
-        dom.projectList = document.querySelector('.project-list');
-        dom.taskList = document.querySelector('.task-list');
-        dom.newProject = document.querySelector('.new-project');
-        dom.newTask = document.querySelector('.new-task');
-
-        dom.header = document.getElementById('header');
-    
-        return dom;
-    }
 
     function setDomEvents() {
         state.dom.newProject.addEventListener('click', () => {

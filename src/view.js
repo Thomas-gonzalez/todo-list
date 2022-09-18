@@ -1,6 +1,19 @@
 import emptyElement from "./util/empty-element";
 import { div } from "./util/create-element";
 
+export function cacheDom() {
+    const dom = {}
+
+    dom.projectList = document.querySelector('.project-list');
+    dom.taskList = document.querySelector('.task-list');
+    dom.newProject = document.querySelector('.new-project');
+    dom.newTask = document.querySelector('.new-task');
+
+    dom.header = document.getElementById('header');
+
+    return dom;
+}
+
 export function renderProjectList(state) {
     emptyElement(state.dom.projectList);
     for (const key in state.projects) {
