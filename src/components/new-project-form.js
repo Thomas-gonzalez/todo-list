@@ -5,19 +5,19 @@ export default function newProjectForm({ container, eventAggregator }) {
     container.appendChild(form());
 
     function form() {
-        const $form = div();
+        const $form = document.createElement('form');
         $form.classList.add('new-project-form');
 
         const $input = textInput('project-form-input');
-        const $button = button('Add', 'project-form-btn');
-
         $form.appendChild($input);
+
+        const $button = button('Add', 'project-form-btn');
         $form.appendChild($button);
 
         setEvents();
 
         function setEvents() {
-            $button.addEventListener('click', () => {
+            $form.addEventListener('submit', () => {
                 const project = mProject($input.value);
                 eventAggregator.publish('projectAdded', project);
             });

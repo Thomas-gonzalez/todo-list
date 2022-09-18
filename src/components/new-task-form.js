@@ -5,7 +5,7 @@ export default function newTaskForm({ container, eventAggregator, project }) {
     container.appendChild(form());
 
     function form() {
-        const $form = div();
+        const $form = document.createElement('form');
         $form.classList.add('new-task-form');
 
         const $input = textInput('task-form-input');
