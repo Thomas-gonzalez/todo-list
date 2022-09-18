@@ -8,13 +8,19 @@ import newTaskForm from "./components/new-task-form";
 runApp();
 
 function runApp() {
-    const projects = {};
-    const dom = cacheDom();
-    const eventAggregator = mEventAggregator();
 
-    let selectedProject = null;
+    const state = mState();
+    
+    function mState() {
+        return {
+            projects: {},
+            dom: cacheDom(),
+            eventAggregator: mEventAggregator(),
+            selectedProject: null,
+        }
+    }
 
-    setDomEvents(dom);
+    setDomEvents();
     setAggregatorEvents();
     addDefaultProject();
 
@@ -31,73 +37,73 @@ function runApp() {
         return dom;
     }
 
-    function setDomEvents(dom) {
-        dom.newProject.addEventListener('click', () => {
-            newProjectForm({ container: dom.projectList, eventAggregator: eventAggregator });
+    function setDomEvents() {
+        state.dom.newProject.addEventListener('click', () => {
+            newProjectForm({ container: state.dom.projectList, eventAggregator: state.eventAggregator });
             document.getElementById('project-form-input').focus();
         });
-        dom.header.addEventListener('click', () => { //log stuff DELETE
-            console.log(`selected project: ${selectedProject.getName()}`);
+        state.dom.header.addEventListener('click', () => { //log stuff DELETE
+            console.log(`selected project: ${state.selectedProject.getName()}`);
         })
-        dom.newTask.addEventListener('click', () => {
+        state.dom.newTask.addEventListener('click', () => {
             newTaskForm({ 
-                container: dom.taskList,
-                eventAggregator: eventAggregator,
-                project: selectedProject,
+                container: state.dom.taskList,
+                eventAggregator: state.eventAggregator,
+                project: state.selectedProject,
             });
         })
     }
 
-    function setAggregatorEvents(dom) {
-        eventAggregator.subscribe('projectAdded', (project) => {
-            projects[project.getName()] = project;
-            selectedProject = project;
+    function setAggregatorEvents() {
+        state.eventAggregator.subscribe('projectAdded', (project) => {
+            state.projects[project.getName()] = project;
+            state.selectedProject = project;
             renderProjectList();
         });
-        eventAggregator.subscribe('projectSelected', (project) => {
-            selectedProject = project;
+        state.eventAggregator.subscribe('projectSelected', (project) => {
+            state.selectedProject = project;
             renderProjectList();
         });
-        eventAggregator.subscribe('taskAdded', ({task, project}) => {
+        state.eventAggregator.subscribe('taskAdded', ({task, project}) => {
             project.addTask(task);
             renderTaskList();
         });
     }
 
     function renderProjectList() {
-        emptyElement(dom.projectList);
-        for (const key in projects) {
-            const project = projects[key];
+        emptyElement(state.dom.projectList);
+        for (const key in state.projects) {
+            const project = state.projects[key];
             const $project = div(project.getName());
             $project.classList.add('project');
 
-            if (project === selectedProject) {
+            if (project === state.selectedProject) {
                 $project.classList.add('selected');
             }
 
             $project.addEventListener('click', () => {
-                eventAggregator.publish('projectSelected', project);
+                state.eventAggregator.publish('projectSelected', project);
             })
 
-            dom.projectList.appendChild($project);
+            state.dom.projectList.appendChild($project);
         }
         renderTaskList();
     }
 
     function renderTaskList() {
-        emptyElement(dom.taskList);
-        const taskList = selectedProject.getTaskList();
+        emptyElement(state.dom.taskList);
+        const taskList = state.selectedProject.getTaskList();
         for (let i = 0; i < taskList.length; i++) {
             const task = taskList[i];
             const $task = div(task.getTitle());
             $task.classList.add('task');
 
-            dom.taskList.appendChild($task);
+            state.dom.taskList.appendChild($task);
         }
     }
 
     function addDefaultProject() {
         const project = mProject('My Project');
-        eventAggregator.publish('projectAdded', project);
+        state.eventAggregator.publish('projectAdded', project);
     }
 }
