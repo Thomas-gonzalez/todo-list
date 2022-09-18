@@ -54,10 +54,14 @@ function runApp() {
             selectedProject = project;
             renderProjectList();
         });
+        eventAggregator.subscribe('projectSelected', (project) => {
+            selectedProject = project;
+            renderProjectList();
+        });
         eventAggregator.subscribe('taskAdded', ({task, project}) => {
             project.addTask(task);
             renderTaskList();
-        })
+        });
     }
 
     function renderProjectList() {
@@ -72,17 +76,12 @@ function runApp() {
             }
 
             $project.addEventListener('click', () => {
-                selectedProject = project;
-                const $list = dom.projectList.children;
-                for (let i = 0; i<$list.length; i++) {
-                    $list[i].classList.remove('selected');
-                }
-                $project.classList.add('selected');
-                renderTaskList();
+                eventAggregator.publish('projectSelected', project);
             })
 
             dom.projectList.appendChild($project);
         }
+        renderTaskList();
     }
 
     function renderTaskList() {
