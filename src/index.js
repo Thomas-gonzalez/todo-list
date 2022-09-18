@@ -1,4 +1,4 @@
-import { createProject } from "./model";
+import { createProject, mProject } from "./model";
 import newProjectForm from "./components/new-project-form";
 import mEventAggregator from "./components/event-aggregator";
 import emptyElement from "./util/empty-element";
@@ -15,6 +15,7 @@ function runApp() {
     let selectedProject = null;
 
     setEvents(dom);
+    addDefaultProject();
 
     function cacheDom() {
         const dom = {}
@@ -32,10 +33,12 @@ function runApp() {
     function setEvents(dom) {
         dom.newProject.addEventListener('click', () => {
             newProjectForm({ container: dom.projectList, eventAggregator: eventAggregator });
+            document.getElementById('project-form-input').focus();
         });
 
         eventAggregator.subscribe('projectAdded', (project) => {
             projects[project.getName()] = project;
+            selectedProject = project;
             renderProjectList();
         });
 
@@ -92,5 +95,10 @@ function runApp() {
 
             dom.taskList.appendChild($task);
         }
+    }
+
+    function addDefaultProject() {
+        const project = mProject('My Project');
+        eventAggregator.publish('projectAdded', project);
     }
 }
